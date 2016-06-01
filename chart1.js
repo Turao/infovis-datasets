@@ -8,16 +8,17 @@ d3.tsv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/cancerDa
 		// binding data
 		var chartData = d;
 
-		var incidents = {
-    	'Children': 0,
-    	'Mid-Adults': 0,
-    	'Older Adults': 0
-    };
-    // selecting columns by type of cancer (independent of age) and counting
-    chartData.forEach(function(site) {
-    	incidents['Children'] += parseInt(site['Children']);
-    	incidents['Mid-Adults'] += parseInt(site['Mid-Adults']);
-    	incidents['Older Adults'] += parseInt(site['Older Adults']);
+
+		// 1. How often appears which type of cancer (independent of age group)?
+		var incidents = [];
+    // counting by type of cancer (independent of age)
+    chartData.forEach(function(cancerType) {
+    	var dict = {};
+    	dict['Site'] = cancerType['Site'];
+    	dict['Total'] = parseInt(cancerType['Children']) 
+    											+ parseInt(cancerType['Mid-Adults']) 
+    											+ parseInt(cancerType['Older Adults']);
+    	incidents.push(dict);
     });
 		console.log('incidents:', incidents);
 
@@ -53,41 +54,48 @@ d3.tsv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/cancerDa
         .attr("x", (width / 2))             
         .attr("y", 0 - (margin.top / 2))
         .attr("text-anchor", "middle")  
-        .style("font-size", "24px") 
-        .text("Incidents per age group");
+        .style("font-size", "14px") 
+        .text("Incidents per type of cancer (independent of age)");
 
 
 
 		// scales
 		var y = d3.scale.linear()
-				.domain([0, d3.max(Object.values(incidents))])
+				.domain([0, d3.max(incidents.map(function (incident) {
+											return incident['Total'];
+										}))
+				])
 		    .range([height, 0]);
 
 		var x = d3.scale.ordinal()
-		    .domain(Object.keys(incidents))
+		    .domain(incidents.map(function (incident) {
+		    												return incident['Site'];
+		    											})
+		    )
+		    
 		    .rangeRoundBands([0, width])
 		var x_colors = d3.scale.category10()
 
 
 		// bars'
-		chart.selectAll('rect').data(Object.values(incidents))
+		chart.selectAll('rect').data(incidents)
 			.enter().append('rect')
 			.style({'stroke': 'black', 'stroke-width': '0.2'})
-			.attr('fill', function (i) {
+			.attr('fill', function (data, i) {
 				return x_colors(i);
 			})
 			.attr('width', barWidth)
 			.attr('height', function (data) {
-					return height - y(data);
+					return height - y(data['Total']);
 			 	})
 			.attr('x', function (data, i) {
-			 		return x(Object.keys(incidents)[i])
+			 		return x(data['Site'])
 			 		// + offset to center the bar with the column name
 			 		 + width/(Object.keys(incidents).length*2)
 			 		 - barWidth/2;
 			 	})
 			.attr('y', function (data) {
-			  	return y(data);
+			  	return y(data['Total']);
 	 		});
 
 
