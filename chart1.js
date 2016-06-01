@@ -1,81 +1,105 @@
-
-
+// little workaround, as chrome doesn't support this
+// very basic method yet...
+Object.values = function(o){return Object.keys(o).map(function(k){return o[k]})};
 
 d3.tsv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/cancerData.tsv",
 	function(err, d) {
+
 		// binding data
 		var chartData = d;
 
+		var incidents = {
+    	'Children': 0,
+    	'Mid-Adults': 0,
+    	'Older Adults': 0
+    };
+    // selecting columns by type of cancer (independent of age) and counting
+    chartData.forEach(function(site) {
+    	incidents['Children'] += parseInt(site['Children']);
+    	incidents['Mid-Adults'] += parseInt(site['Mid-Adults']);
+    	incidents['Older Adults'] += parseInt(site['Older Adults']);
+    });
+		console.log('incidents:', incidents);
+
+
+
+		// ****************
+		// MAKING THE CHART
+		// ****************
+
 		// chart's properties
-		var height = 500,
-				width = 1000,
-		    margin = 100;
+		var margin = {top: 50, right: 20, bottom: 100, left: 100},
+				height = 240,
+				width = 420;
 
 		// bars' properties
-		var barWidth = 50;
-
-		var chart = d3.select('#chart')
-		  .attr('width', width)
-		  .attr('height', height);
+		var barWidth = 20;
 
 
-		// grouping by type of cancer (independent of age)
-		var incidents = [];
-		var children = 0,
-				mid = 0,
-				older = 0;
-		// so, for each type of cancer we count the incidents
-		chartData.forEach(function(d) {
-			children += parseInt(d['Children']);
-			mid += parseInt(d['Mid-Adults']);
-			older += parseInt(d['Older Adults']);
-		});
-		incidents.push(children);
-		incidents.push(mid);
-		incidents.push(older);
 
-		console.log(incidents);
+		// creating the chart elements in the html
+		var div = d3.select('#chart')
+			.attr('width', width + margin.left + margin.right)
+		  .attr('height', height + margin.top + margin.bottom);
+
+		// adds the bars svg to the chart's div
+		var chart = d3.select('#chart').append("svg")
+		  .attr('width', width + margin.left + margin.right)
+		  .attr('height', height + margin.top + margin.bottom)
+		  .append("g")
+    	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
 
 		// scales
-		var yScale = d3.scale.linear()
-				.domain([0,d3.max(incidents)])
-		    .range([0, height]);
-		        
+		var y = d3.scale.linear()
+				.domain([0, d3.max(Object.values(incidents))])
+		    .range([height, 0]);
 
-		console.log(chartData.length);
-		var xScale = d3.scale.ordinal()
-		    .domain(d3.range(0, incidents.length))
-		    .rangeBands([0, width]);
+		var x = d3.scale.ordinal()
+		    .domain(Object.keys(incidents))
+		    .rangeRoundBands([0, width])
+		var x_colors = d3.scale.category10()
+
 
 		// bars'
-		chart.selectAll('rect').data(incidents)
+		chart.selectAll('rect').data(Object.values(incidents))
 			.enter().append('rect')
-			.style({'fill': '#cccccc', 'stroke': 'black', 'stroke-width': '1'})
+			.style({'stroke': 'black', 'stroke-width': '0.2'})
+			.attr('fill', function (i) {
+				return x_colors(i);
+			})
 			.attr('width', barWidth)
 			.attr('height', function (data) {
-					return height - yScale(data);
+					return height - y(data);
 			 	})
 			.attr('x', function (data, i) {
-			 		return xScale(i);
+			 		return x(Object.keys(incidents)[i])
+			 		// + offset to center the bar with the column name
+			 		 + width/(Object.keys(incidents).length*2)
+			 		 - barWidth/2;
 			 	})
 			.attr('y', function (data) {
-			  	return yScale(data);
+			  	return y(data);
 	 		});
+
+
 
 
 			//x-axis
 			var xAxis = d3.svg.axis()
-			  .scale(xScale)
+			  .scale(x)
 			  .orient("bottom");
 			    
 			chart.append("g")
 			  .attr("class", "x axis")
 			  .attr("transform", "translate(0," + height + ")")
 				.call(xAxis);
+
 			  
 			//y-axis
 			var yAxis = d3.svg.axis()
-			  .scale(yScale)
+			  .scale(y)
 			  .orient("left");
 			  
 			chart.append("g")
