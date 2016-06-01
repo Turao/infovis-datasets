@@ -49,6 +49,13 @@ d3.tsv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/cancerDa
 		  .append("g")
     	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    chart.append("text")
+        .attr("x", (width / 2))             
+        .attr("y", 0 - (margin.top / 2))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "24px") 
+        .text("Incidents per age group");
+
 
 
 		// scales
@@ -105,8 +112,6 @@ d3.tsv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/cancerDa
 			chart.append("g")
 			  .attr("class", "y axis")
 			  .call(yAxis);
-
-
 	});
 
  
