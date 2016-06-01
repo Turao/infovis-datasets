@@ -20,7 +20,7 @@ d3.tsv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/cancerDa
     											+ parseInt(cancerType['Older Adults']);
     	incidents.push(dict);
     });
-		console.log('incidents:', incidents);
+		// console.log('incidents:', incidents);
 
 
 
@@ -38,13 +38,8 @@ d3.tsv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/cancerDa
 
 
 
-		// creating the chart elements in the html
-		var div = d3.select('#chart')
-			.attr('width', width + margin.left + margin.right)
-		  .attr('height', height + margin.top + margin.bottom);
-
 		// adds the bars svg to the chart's div
-		var chart = d3.select('#chart').append("svg")
+		var chart = d3.select('#ch1').append("svg")
 		  .attr('width', width + margin.left + margin.right)
 		  .attr('height', height + margin.top + margin.bottom)
 		  .append("g")
@@ -74,7 +69,7 @@ d3.tsv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/cancerDa
 		    )
 		    
 		    .rangeRoundBands([0, width])
-		var x_colors = d3.scale.category10()
+		var color = d3.scale.category10()
 
 
 		// bars'
@@ -82,7 +77,7 @@ d3.tsv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/cancerDa
 			.enter().append('rect')
 			.style({'stroke': 'black', 'stroke-width': '0.2'})
 			.attr('fill', function (data, i) {
-				return x_colors(i);
+				return color(i);
 			})
 			.attr('width', barWidth)
 			.attr('height', function (data) {
