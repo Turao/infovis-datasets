@@ -8,8 +8,14 @@ d3.tsv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/cancerDa
 		// binding data
 		var chartData = d;
 
+		var total = 0;
+		chartData.forEach(function(cancerType) {
+			total += parseFloat(cancerType['Children'])
+							+ parseFloat(cancerType['Mid-Adults'])
+							+ parseFloat(cancerType['Older Adults']);
+    });
+		console.log(total);
 
-		// 1. How often appears which type of cancer (independent of age group)?
 		var percentages = [];
 
     // % of distribution independent of age
@@ -17,10 +23,10 @@ d3.tsv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/cancerDa
     	var dict = {};
     	dict['Site'] = cancerType['Site'];
     	dict['Percentage'] = (
-    											parseFloat(cancerType['PChildren'])
-									    	+ parseFloat(cancerType['PMid-Adults'])
-									    	+ parseFloat(cancerType['POlder Adults'])
-									    	)/300; // ((children + mid + older) / num. of groups) / 100
+    											parseFloat(cancerType['Children'])
+									    	+ parseFloat(cancerType['Mid-Adults'])
+									    	+ parseFloat(cancerType['Older Adults'])
+									    	) / total;
 			percentages.push(dict);
     });
 		console.log('percentages:', percentages);
