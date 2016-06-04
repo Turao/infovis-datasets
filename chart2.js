@@ -20,7 +20,7 @@ d3.tsv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/cancerDa
     	dict['POlder Adults'] = parseFloat(cancerType['POlder Adults']);
     	percentages.push(dict);
     });
-		console.log('percentages:', percentages);
+		// console.log('percentages:', percentages);
 
 
 
@@ -46,7 +46,7 @@ d3.tsv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/cancerDa
 		  .attr('width', width + margin.left + margin.right)
 		  .attr('height', height + margin.top + margin.bottom)
 		  .append("g")
-    	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    	.attr("transform", "translate(" + margin.left/2 + "," + margin.top + ")");
 
     chart.append("text")
        .attr("x", (width / 2))             
@@ -84,11 +84,12 @@ d3.tsv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/cancerDa
 		  .text(function(d) { return d.value; });
 
 
-	legend = chart.append("g")
-	  .attr("class", "legend")
-	  .attr("transform", "translate (50,30)")
-	  .style("font-size", "12px")
-	  .call(d3.legend);
+	// to do
+	// legend = chart.append("g")
+	//   .attr("class", "legend")
+	//   .attr("transform", "translate (50,30)")
+	//   .style("font-size", "12px")
+	//   .call(d3.legend);
 
 
 });
