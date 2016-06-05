@@ -27,16 +27,16 @@ function(err, d) {
 	// chart's properties
 	var margin = {top: 15, right: 20, bottom: 10, left: 100},
 		height = 350,
-		width = 450;
+		width = 400;
 
 	// bars' properties
-	var radius = Math.min(width, height) / 1.7;
-	var thickness = 60;
+	var radius = Math.min(width, height) / 2.0;
+	var thickness = 50;
 
 	var color = d3.scale.category10()
 
 	// adds the bars svg to the chart's div
-	var chart = d3.select('#ch2').append("svg")
+	var chart = d3.select('#ch2_b').append("svg")
 	   .attr('width', width + margin.left + margin.right)
 	   .attr('height', height + margin.top + margin.bottom)
 	   .append("g")
@@ -57,7 +57,7 @@ function(err, d) {
 	   .sort(null)
 	   .value(function (d) {return d['PMid-Adults']});
 
-    var g = chart.selectAll(".arc")
+     var g = chart.selectAll(".arc")
 	   .data(pie(percentages))
 	   .enter().append("g")
 	   .attr("class", "arc")
@@ -68,38 +68,66 @@ function(err, d) {
 	   .style("fill", function (d, i) { return color(i); })
 	   .attr("data-legend", function (d) { return d.name});
 
-	g.append("text")
-	   .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-	   .text(function(d) { return d.value; });
-
-	// add legend   
-	var legend = chart.append("g")
+	var values = chart.append("g")
 	  .attr("class", "legend")
 	  .attr("x", width - 65)
 	  .attr("y", 25)
 	  .attr("height", 100)
 	  .attr("width", 100);
 
-	legend.selectAll('g').data(percentages)
+	values.selectAll('g').data(percentages)
       .enter()
       .append('g')
       .each(function(d, i) {
         var g = d3.select(this);
       
         g.append("rect")
-          .attr("x", -20)
-          .attr("y", (i+1) * 25 + 40)
+          .attr("x", width/2 - 10)
+          .attr("y", ((i+1) * 15 + 6 + height/3))
           .attr("width", 10)
           .attr("height", 10)
           .style("fill", color(i));
         
         g.append("text")
-          .attr("x", -5)
-          .attr("y", (i+1) * 25 + 50)
+          .attr("x", width/2 + 5)
+          .attr("y", ((i+1) * 15 + 15 + height/3))
           .attr("height",30)
           .attr("width",100)
+          .attr("font-size", "10px")
           .style("fill", color(i))
-          .text(d.Site);
+          .text(d["PMid-Adults"]);
       });
+
+
+	// // add legend   
+	// var legend = chart.append("g")
+	//   .attr("class", "legend")
+	//   .attr("x", width - 65)
+	//   .attr("y", 25)
+	//   .attr("height", 100)
+	//   .attr("width", 100);
+
+	// legend.selectAll('g').data(percentages)
+ //      .enter()
+ //      .append('g')
+ //      .each(function(d, i) {
+ //        var g = d3.select(this);
+      
+ //        g.append("rect")
+ //          .attr("x", -20)
+ //          .attr("y", (i+1) * 15 + 40)
+ //          .attr("width", 10)
+ //          .attr("height", 10)
+ //          .style("fill", color(i));
+        
+ //        g.append("text")
+ //          .attr("x", -5)
+ //          .attr("y", (i+1) * 15 + 49)
+ //          .attr("height",30)
+ //          .attr("width",100)
+ //          .attr("font-size", "10px")
+ //          .style("fill", color(i))
+ //          .text(d.Site);
+ //      });
 
 });

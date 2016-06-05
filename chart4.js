@@ -142,16 +142,17 @@ function(err, d) {
       
         g.append("rect")
           .attr("x", 50)
-          .attr("y", (i % 3 ) * 25)
+          .attr("y", (i % 3 ) * 15)
           .attr("width", 10)
           .attr("height", 10)
           .style("fill", color_hash[String(i % 3)][1]);
         
         g.append("text")
           .attr("x", 65)
-          .attr("y", (i % 3) * 25 + 10)
+          .attr("y", (i % 3) * 15 + 10)
           .attr("height",30)
           .attr("width",100)
+          .attr("font-size", "10px")
           .style("fill", color_hash[String(i % 3)][1])
           .text(color_hash[String(i % 3)][0]);
       });
