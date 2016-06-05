@@ -67,6 +67,14 @@ function(err, d) {
 
 	var color = d3.scale.category10()
 
+
+	var tip = d3.tip()
+			.attr('class', 'd3-tip')
+			.offset([-10, 0])
+			.html(function(d) {
+			return "<span style='color:white'>" + d['Total'] + "</span>";
+			})
+
 	// bars'
 	chart.selectAll('rect').data(incidents)
 		.enter().append('rect')
@@ -86,7 +94,11 @@ function(err, d) {
 		})
 		.attr('y', function (data) {
 		  	return y(data['Total']);
-		});
+		})		
+		.on('mouseover', tip.show)
+  		.on('mouseout', tip.hide);
+
+	chart.call(tip);;
 
 	//x-axis
 	var xAxis = d3.svg.axis()
