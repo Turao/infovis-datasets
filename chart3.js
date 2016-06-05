@@ -69,7 +69,7 @@ function(err, d) {
 		.attr("y", 0 - (margin.top / 2))
 		.attr("text-anchor", "middle")  
 		.style("font-size", "14px") 
-		.text("How does the cancer frequency changes as you age...");
+		.text("How does the cancer frequency distribution changes as you age...");
 
     // x-axis
     var xAxis = d3.svg.axis()
@@ -141,11 +141,11 @@ function(err, d) {
         var g = d3.select(this);
       
         g.append('text')
-          .attr('x', 365)
+          .attr('x', 360)
           .attr('y', i * 25 + 10)
           .attr('height',30)
           .attr('width',100)
-          .attr('font-size', '14px')
+          .attr('font-size', '12px')
           .style('fill', color(i))
           .text(d);
       });
