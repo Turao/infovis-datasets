@@ -115,7 +115,6 @@ function(err, d) {
 		    return y(d['Percentage']); 
 		});
 
-
 	// plot the lines
 	percentages.forEach( function (site, i) {
 		chart.append("path")
@@ -125,6 +124,32 @@ function(err, d) {
 		.attr('stroke', color(i))
 		.attr('stroke-width', '1px')
 		.attr('d', line);		 
+
+	// add legend
+	var sites = chartData.map(function (o) { return o['Site'] }); 
+	var legend = chart.append('g')
+	  .attr('class', 'legend')
+	  .attr('x', width - 65)
+	  .attr('y', 25)
+	  .attr('height', 100)
+	  .attr('width', 100);
+
+	legend.selectAll('g').data(sites)
+      .enter()
+      .append('g')
+      .each(function (d, i) {
+        var g = d3.select(this);
+      
+        g.append('text')
+          .attr('x', 365)
+          .attr('y', i * 25 + 10)
+          .attr('height',30)
+          .attr('width',100)
+          .attr('font-size', '14px')
+          .style('fill', color(i))
+          .text(d);
+      });
+
 	});
 
 });
