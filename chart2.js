@@ -3,14 +3,14 @@
 // Object.values = function(o){return Object.keys(o).map(function(k){return o[k]})};
 
 d3.tsv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/cancerData.tsv",
-	function(err, d) {
+function(err, d) {
 
-		// binding data
-		var chartData = d;
+	// binding data
+	var chartData = d;
 
+	// 1. How often appears which type of cancer (independent of age group)?
+	var percentages = [];
 
-		// 1. How often appears which type of cancer (independent of age group)?
-		var percentages = [];
     // counting by type of cancer (independent of age)
     chartData.forEach(function(cancerType) {
     	var dict = {};
@@ -20,33 +20,29 @@ d3.tsv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/cancerDa
     	dict['POlder Adults'] = parseFloat(cancerType['POlder Adults']);
     	percentages.push(dict);
     });
-		// console.log('percentages:', percentages);
+	// console.log('percentages:', percentages);
 
+	// ****************
+	// MAKING THE CHART
+	// ****************
 
+	// chart's properties
+	var margin = {top: 15, right: 20, bottom: 10, left: 100},
+		height = 350,
+		width = 450;
 
-		// ****************
-		// MAKING THE CHART
-		// ****************
+	// bars' properties
+	var radius = Math.min(width, height) / 1.7;
+	var thickness = 60;
 
-		// chart's properties
-		var margin = {top: 50, right: 20, bottom: 100, left: 100},
-				height = 240,
-				width = 420;
+	var color = d3.scale.category10()
 
-		// bars' properties
-		var radius = Math.min(width, height) / 2;
-		var thickness = 25;
-
-		var color = d3.scale.category10()
-
-
-
-		// adds the bars svg to the chart's div
-		var chart = d3.select('#ch2').append("svg")
-		  .attr('width', width + margin.left + margin.right)
-		  .attr('height', height + margin.top + margin.bottom)
-		  .append("g")
-    	.attr("transform", "translate(" + margin.left/2 + "," + margin.top + ")");
+	// adds the bars svg to the chart's div
+	var chart = d3.select('#ch2').append("svg")
+	   .attr('width', width + margin.left + margin.right)
+	   .attr('height', height + margin.top + margin.bottom)
+	   .append("g")
+       .attr("transform", "translate(" + margin.left/2 + "," + margin.top + ")");
 
     chart.append("text")
        .attr("x", (width / 2))             
@@ -55,34 +51,28 @@ d3.tsv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/cancerDa
        .style("font-size", "14px") 
        .text(" Types of cancer distributed within one age group (Children)");
 
-
-
-
-
     var arc = d3.svg.arc()
-	    .outerRadius(radius - thickness)
-	    .innerRadius(radius - thickness*2);
+	   .outerRadius(radius - thickness)
+	   .innerRadius(radius - thickness*2);
 
     var pie = d3.layout.pie()
-	    .sort(null)
-	    .value(function (d) {return d['PChildren']});
-
+	   .sort(null)
+	   .value(function (d) {return d['PChildren']});
 
     var g = chart.selectAll(".arc")
-	    .data(pie(percentages))
-	    .enter().append("g")
-	    .attr("class", "arc")
-	    .attr("transform", "translate(" + width/2 + "," + (height/2 + margin.top) + ")");
+	   .data(pie(percentages))
+	   .enter().append("g")
+	   .attr("class", "arc")
+	   .attr("transform", "translate(" + width/2 + "," + (height/2 + margin.top) + ")");
 
-	  g.append("path")
-		  .attr("d", arc)
-		  .style("fill", function (d, i) { return color(i); })
-		  .attr("data-legend", function (d) { return d.name});
+	g.append("path")
+	   .attr("d", arc)
+	   .style("fill", function (d, i) { return color(i); })
+	   .attr("data-legend", function (d) { return d.name});
 
-	  g.append("text")
-		  .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-		  .text(function(d) { return d.value; });
-
+	g.append("text")
+	   .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+	   .text(function(d) { return d.value; });
 
 	// to do
 	// legend = chart.append("g")
@@ -91,7 +81,4 @@ d3.tsv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/cancerDa
 	//   .style("font-size", "12px")
 	//   .call(d3.legend);
 
-
 });
-
- 
