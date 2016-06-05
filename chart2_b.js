@@ -15,12 +15,10 @@ function(err, d) {
     chartData.forEach(function(cancerType) {
     	var dict = {};
     	dict['Site'] = cancerType['Site'];
-    	dict['PChildren'] = parseFloat(cancerType['PChildren']);
     	dict['PMid-Adults'] = parseFloat(cancerType['PMid-Adults']);
-    	dict['POlder Adults'] = parseFloat(cancerType['POlder Adults']);
     	percentages.push(dict);
     });
-	// console.log('percentages:', percentages);
+	
 
 	// ****************
 	// MAKING THE CHART
@@ -49,7 +47,7 @@ function(err, d) {
        .attr("y", margin.top)
        .attr("text-anchor", "middle")  
        .style("font-size", "14px") 
-       .text(" Types of cancer distributed within one age group (Children)");
+       .text(" Types of cancer distributed within one age group (Mid-Adults)");
 
     var arc = d3.svg.arc()
 	   .outerRadius(radius - thickness)
@@ -57,7 +55,7 @@ function(err, d) {
 
     var pie = d3.layout.pie()
 	   .sort(null)
-	   .value(function (d) {return d['PChildren']});
+	   .value(function (d) {return d['PMid-Adults']});
 
     var g = chart.selectAll(".arc")
 	   .data(pie(percentages))
@@ -74,11 +72,34 @@ function(err, d) {
 	   .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
 	   .text(function(d) { return d.value; });
 
-	// to do
-	// legend = chart.append("g")
-	//   .attr("class", "legend")
-	//   .attr("transform", "translate (50,30)")
-	//   .style("font-size", "12px")
-	//   .call(d3.legend);
+	// add legend   
+	var legend = chart.append("g")
+	  .attr("class", "legend")
+	  .attr("x", width - 65)
+	  .attr("y", 25)
+	  .attr("height", 100)
+	  .attr("width", 100);
+
+	legend.selectAll('g').data(percentages)
+      .enter()
+      .append('g')
+      .each(function(d, i) {
+        var g = d3.select(this);
+      
+        g.append("rect")
+          .attr("x", -20)
+          .attr("y", (i+1) * 25 + 40)
+          .attr("width", 10)
+          .attr("height", 10)
+          .style("fill", color(i));
+        
+        g.append("text")
+          .attr("x", -5)
+          .attr("y", (i+1) * 25 + 50)
+          .attr("height",30)
+          .attr("width",100)
+          .style("fill", color(i))
+          .text(d.Site);
+      });
 
 });
