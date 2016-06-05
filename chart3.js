@@ -42,7 +42,7 @@ function(err, d) {
 	// chart's properties
 	var margin = {top: 60, right: 10, bottom: 30, left: 75},
 	height = 240,
-	width = 420;
+	width = 460;
 
 	// scales
 	var y = d3.scale.linear()
@@ -52,7 +52,7 @@ function(err, d) {
 	var keys = percentages[0].map( function(o) { return o['Group']; });
 	var x = d3.scale.ordinal()
 		.domain(keys)
-		.rangeRoundBands([0, width])
+		.rangeRoundBands([-40, width])
 
 	var color = d3.scale.category10()
 
@@ -69,6 +69,7 @@ function(err, d) {
 		.attr("y", 0 - (margin.top / 2))
 		.attr("text-anchor", "middle")  
 		.style("font-size", "14px") 
+        .style("font-weight","bold") 
 		.text("How does the cancer frequency distribution changes as you age...");
 
     // x-axis
@@ -122,7 +123,7 @@ function(err, d) {
 		.attr('class', 'line')
 		.attr('fill', 'none')
 		.attr('stroke', color(i))
-		.attr('stroke-width', '1px')
+		.attr('stroke-width', '3px')
 		.attr('d', line);		 
 
 	// add legend
@@ -141,7 +142,7 @@ function(err, d) {
         var g = d3.select(this);
       
         g.append('text')
-          .attr('x', 360)
+          .attr('x', 390)
           .attr('y', i * 25 + 10)
           .attr('height',30)
           .attr('width',100)

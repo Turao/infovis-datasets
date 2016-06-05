@@ -52,6 +52,7 @@ function(err, d) {
         .attr("y", 0 - (margin.top / 2))
         .attr("text-anchor", "middle")  
         .style("font-size", "14px") 
+        .style("font-weight","bold") 
         .text("Distribution of cancer by group");
 
 

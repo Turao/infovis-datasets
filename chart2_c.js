@@ -25,9 +25,9 @@ function(err, d) {
 	// ****************
 
 	// chart's properties
-	var margin = {top: 15, right: 20, bottom: 10, left: 100},
+	var margin = {top: 10, right: 20, bottom: 10, left: 100},
 		height = 350,
-		width = 400;
+		width = 460;
 
 	// bars' properties
 	var radius = Math.min(width, height) / 2.0;
@@ -46,7 +46,8 @@ function(err, d) {
        .attr("x", (width / 2))             
        .attr("y", margin.top)
        .attr("text-anchor", "middle")  
-       .style("font-size", "14px") 
+       .style("font-size", "14px")
+       .style("font-weight","bold") 
        .text(" Types of cancer distributed within one age group (Old Adult)");
 
     var arc = d3.svg.arc()

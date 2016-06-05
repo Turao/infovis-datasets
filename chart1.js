@@ -30,10 +30,10 @@ function(err, d) {
 	// chart's properties
 	var margin = {top: 60, right: 10, bottom: 30, left: 75},
 		height = 240,
-		width = 420;
+		width = 470;
 
 	// bars' properties
-	var barWidth = 40;
+	var barWidth = 45;
 
 	// adds the bars svg to the chart's div
 	var chart = d3.select('#ch1').append("svg")
@@ -47,6 +47,7 @@ function(err, d) {
        .attr("y", 0 - (margin.top / 2))
        .attr("text-anchor", "middle")  
        .style("font-size", "14px")
+       .style("font-weight","bold") 
        .text("Incidents per type of cancer (independent of age)");
 
 	// scales
