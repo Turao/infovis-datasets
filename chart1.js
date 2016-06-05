@@ -70,7 +70,7 @@ function(err, d) {
 	// bars'
 	chart.selectAll('rect').data(incidents)
 		.enter().append('rect')
-		.style({'stroke': 'white', 'stroke-width': '0.2'})
+		.style({'stroke': 'black', 'stroke-width': '0.2'})
 		.attr('fill', function (data, i) {
 			return color(i);
 		})

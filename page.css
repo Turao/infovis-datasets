@@ -30,13 +30,11 @@ div{
 .row1{
     padding-top:20px;
     padding-left:20px;
-    padding-bottom:20px;
 }
 
 .row2{
     padding-top:20px;
     padding-left:20px;
-    padding-bottom:20px;
 }
 
 fieldset
@@ -50,6 +48,7 @@ fieldset
   border-color:#EEE9E9;
   /*background-image: linear-gradient( to bottom, #403030, #404040, #303030, #202020 );*/
   box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+  margin-bottom:20px;
 }
 
 legend

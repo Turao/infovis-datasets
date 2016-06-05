@@ -33,8 +33,8 @@ function(err, d) {
 	// ****************
 
 	// chart's properties
-	var margin = {top: 50, right: 20, bottom: 100, left: 40},
-		height = 240,
+	var margin = {top: 60, right: 20, bottom: 45, left: 30},
+		height = 270,
 		width = 550;
 
 	// bars' properties
@@ -86,7 +86,7 @@ function(err, d) {
 	// bars'
 	chart.selectAll('rect').data(percentages)
 		.enter().append('rect')
-		.style({'stroke': 'white', 'stroke-width': '0.2'})
+		.style({'stroke': 'black', 'stroke-width': '0.2'})
 		.attr('fill', function (data, i) {
 		 		return color_hash[String(i % 3)][1];
 		 	})
