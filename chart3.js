@@ -124,7 +124,7 @@ function(err, d) {
 		.attr('fill', 'none')
 		.attr('stroke', color(i))
 		.attr('stroke-width', '3px')
-		.attr('d', line);		 
+		.attr('d', line);	 
 
 	// add legend
 	var sites = chartData.map(function (o) { return o['Site'] }); 

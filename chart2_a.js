@@ -40,7 +40,7 @@ function(err, d) {
 	   .attr('width', width + margin.left + margin.right)
 	   .attr('height', height + margin.top + margin.bottom)
 	   .append("g")
-       .attr("transform", "translate(" + margin.left/2 + "," + margin.top + ")");
+     .attr("transform", "translate(" + margin.left/2 + "," + margin.top + ")");
 
     chart.append("text")
        .attr("x", (width / 2))             
@@ -54,6 +54,10 @@ function(err, d) {
 	   .outerRadius(radius - thickness)
 	   .innerRadius(radius - thickness*2);
 
+    var arcOver = d3.svg.arc()
+     .innerRadius(radius - thickness*2)
+     .outerRadius(radius - thickness + 20);
+
     var pie = d3.layout.pie()
 	   .sort(null)
 	   .value(function (d) {return d['PChildren']});
@@ -62,11 +66,21 @@ function(err, d) {
 	   .data(pie(percentages))
 	   .enter().append("g")
 	   .attr("class", "arc")
-	   .attr("transform", "translate(" + width/2 + "," + (height/2 + margin.top) + ")");
+	   .attr("transform", "translate(" + width/2 + "," + (height/2 + margin.top) + ")")
 
 	g.append("path")
 	   .attr("d", arc)
 	   .style("fill", function (d, i) { return color(i); })
+     .on("mouseover", function(d) {
+          d3.select(this).transition()
+             .duration(1000)
+             .attr("d", arcOver);
+     })
+     .on("mouseout", function(d) {
+          d3.select(this).transition()
+             .duration(1000)
+             .attr("d", arc);
+     })
 	   .attr("data-legend", function (d) { return d.name});
 
 	var values = chart.append("g")
@@ -83,20 +97,20 @@ function(err, d) {
         var g = d3.select(this);
       
         g.append("rect")
-          .attr("x", width/2 - 10)
+          .attr("x", width/2 - 15)
           .attr("y", ((i+1) * 15 + 6 + height/3))
           .attr("width", 10)
           .attr("height", 10)
           .style("fill", color(i));
         
         g.append("text")
-          .attr("x", width/2 + 5)
+          .attr("x", width/2)
           .attr("y", ((i+1) * 15 + 15 + height/3))
           .attr("height",30)
           .attr("width",100)
           .attr("font-size", "10px")
           .style("fill", color(i))
-          .text(d.PChildren);
+          .text(d.PChildren + "%");
       });
 
 	// g.append("text")

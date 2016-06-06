@@ -99,7 +99,7 @@ function(err, d) {
 		.on('mouseover', tip.show)
   		.on('mouseout', tip.hide);
 
-	chart.call(tip);;
+	chart.call(tip);
 
 	//x-axis
 	var xAxis = d3.svg.axis()
