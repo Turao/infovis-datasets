@@ -114,35 +114,35 @@ function(err, d) {
       });
 
 
-	// // add legend   
-	// var legend = chart.append("g")
-	//   .attr("class", "legend")
-	//   .attr("x", width - 65)
-	//   .attr("y", 25)
-	//   .attr("height", 100)
-	//   .attr("width", 100);
+	// add legend   
+	var legend = chart.append("g")
+	  .attr("class", "legend")
+	  .attr("x", width - 65)
+	  .attr("y", 25)
+	  .attr("height", 100)
+	  .attr("width", 100);
 
-	// legend.selectAll('g').data(percentages)
- //      .enter()
- //      .append('g')
- //      .each(function(d, i) {
- //        var g = d3.select(this);
-      
- //        g.append("rect")
- //          .attr("x", -20)
- //          .attr("y", (i+1) * 15 + 40)
- //          .attr("width", 10)
- //          .attr("height", 10)
- //          .style("fill", color(i));
-        
- //        g.append("text")
- //          .attr("x", -5)
- //          .attr("y", (i+1) * 15 + 49)
- //          .attr("height",30)
- //          .attr("width",100)
- //          .attr("font-size", "10px")
- //          .style("fill", color(i))
- //          .text(d.Site);
- //      });
+	legend.selectAll('g').data(percentages)
+    .enter()
+    .append('g')
+    .each(function(d, i) {
+      var g = d3.select(this);
+ 
+      g.append("rect")
+        .attr("x", -20)
+        .attr("y", (i+1) * 15 + 40)
+        .attr("width", 10)
+        .attr("height", 10)
+        .style("fill", color(i));
+   
+      g.append("text")
+        .attr("x", -5)
+        .attr("y", (i+1) * 15 + 49)
+        .attr("height",30)
+        .attr("width",100)
+        .attr("font-size", "10px")
+        .style("fill", color(i))
+        .text(d.Site);
+    });
 
 });
