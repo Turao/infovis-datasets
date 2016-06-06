@@ -52,7 +52,7 @@ function(err, d) {
 	var keys = percentages[0].map( function(o) { return o['Group']; });
 	var x = d3.scale.ordinal()
 		.domain(keys)
-		.rangeRoundBands([-40, width])
+		.rangeRoundBands([0, width])
 
 	var color = d3.scale.category10()
 
