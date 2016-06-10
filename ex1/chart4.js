@@ -2,7 +2,7 @@
 // very basic method yet...
 Object.values = function(o){return Object.keys(o).map(function(k){return o[k]})};
 
-d3.tsv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/cancerData.tsv",
+d3.tsv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex1/cancerData.tsv",
 function(err, d) {
 
 	// binding data
