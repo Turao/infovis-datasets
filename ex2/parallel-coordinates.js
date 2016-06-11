@@ -20,11 +20,13 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
 
   console.log(data);
 
+  // Extract the possible values for species
+  var speciesSet = new Set();
+  data.map(function (o){ speciesSet.add(o['species']); });
+
   // Extract the list of dimensions and create a scale for each.
   x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
     if(d == 'species') {
-      var speciesSet = new Set();
-      data.map(function (o){ speciesSet.add(o[d]); });
       y[d] = d3.scale.ordinal()
         .domain(Array.from(speciesSet))
         .rangeRoundPoints([height, 0]);
@@ -49,13 +51,28 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
     .enter().append("path")
     .attr("d", path);
 
+
+  // Creates a color function
+  var color = d3.scale.category10()
+    .domain(Array.from(speciesSet));
+
+
   // Add blue foreground lines for focus.
   foreground = svg.append("g")
     .attr("class", "foreground")
     .selectAll("path")
     .data(data)
     .enter().append("path")
-    .attr("d", path);
+    .attr("d", path)
+
+    // // DISABLE TO USE DIFFERENT COLORS FOR EACH SPECIES!    
+    .attr("stroke", 'steelblue');
+
+    // // ENABLE TO USE DIFFERENT COLORS FOR EACH SPECIES!
+    // .attr("stroke", function(data) {
+    //   console.log(color(data['species']));
+    //   return color(data['species']);
+    // });
 
   // Add a group element for each dimension.
   var g = svg.selectAll(".dimension")
