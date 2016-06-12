@@ -52,10 +52,27 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
     .attr("d", path);
 
 
+  // highlighted lines
+  var highlighted = new Set();
+
+
   // Creates a color function
   var color = d3.scale.category10()
     .domain(Array.from(speciesSet));
 
+  function highlightPath (path) {
+    highlighted.add(path[0][0]);
+
+    path.attr("stroke", 'green')
+      .attr("stroke-width", "5px");
+  };
+
+  function unhighlightPath (path) {
+    highlighted.delete(path[0][0]);
+    
+    path.attr("stroke", 'steelblue')
+      .attr("stroke-width", "1px");
+  };
 
   // Add blue foreground lines for focus.
   foreground = svg.append("g")
@@ -64,6 +81,35 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
     .data(data)
     .enter().append("path")
     .attr("d", path)
+
+    .on("mouseover", function() {
+      var path = d3.select(this);
+      if(!highlighted.has(path[0][0])) {
+        console.log('has', highlighted.has(path));
+        path.attr("stroke", 'red')
+          .attr("stroke-width", "3px");
+      }
+    })
+    .on("mouseout", function() {
+      var path = d3.select(this);
+      console.log('path[0]', path[0][0]);
+      console.log('highlighted', highlighted);
+
+      if(!highlighted.has(path[0][0])) {
+        unhighlightPath(path);
+      }
+    })
+
+    .on("click", function() {
+      var path = d3.select(this);
+
+      if(!highlighted.has(path[0][0])) {
+        highlightPath(path);
+      }
+      else {
+        unhighlightPath(path);
+      }
+    })
 
     // // DISABLE TO USE DIFFERENT COLORS FOR EACH SPECIES!    
     .attr("stroke", 'steelblue');
@@ -91,13 +137,14 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
     .text(function(d) { return d; });
 
 
-  // Add and store a brush for each axis.
-  g.append("g")
-    .attr("class", "brush")
-    .each(function(d) { d3.select(this).call(y[d].brush = d3.svg.brush().y(y[d]).on("brush", brush)); })
-    .selectAll("rect")
-    .attr("x", -10)
-    .attr("width", 16);
+  // // Add and store a brush for each axis.
+  // g.append("g")
+  //   .attr("class", "brush")
+  //   .each(function(d) { d3.select(this).call(y[d].brush = d3.svg.brush().y(y[d]).on("brush", brush)); })
+  //   .selectAll("rect")
+  //   .attr("x", -10)
+  //   .attr("width", 16);
+
 
 
 
