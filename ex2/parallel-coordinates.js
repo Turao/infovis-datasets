@@ -6,6 +6,7 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
 
   var x = d3.scale.ordinal().rangePoints([0, width], 1),
       y = {};
+      dragging = {};
 
   var line = d3.svg.line(),
       axis = d3.svg.axis().orient("left"),
@@ -18,7 +19,6 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  console.log(data);
 
   // Extract the possible values for species
   var speciesSet = new Set();
@@ -37,8 +37,7 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
         .range([height, 0])
         .nice();
     }
-    console.log(d, y[d].domain());
-    console.log('species 0', y['species']);
+
     return y[d];
   }));
 
@@ -85,15 +84,12 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
     .on("mouseover", function() {
       var path = d3.select(this);
       if(!highlighted.has(path[0][0])) {
-        console.log('has', highlighted.has(path));
         path.attr("stroke", 'red')
           .attr("stroke-width", "3px");
       }
     })
     .on("mouseout", function() {
       var path = d3.select(this);
-      console.log('path[0]', path[0][0]);
-      console.log('highlighted', highlighted);
 
       if(!highlighted.has(path[0][0])) {
         unhighlightPath(path);
@@ -116,7 +112,6 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
 
     // // ENABLE TO USE DIFFERENT COLORS FOR EACH SPECIES!
     // .attr("stroke", function(data) {
-    //   console.log(color(data['species']));
     //   return color(data['species']);
     // });
 
@@ -125,7 +120,31 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
     .data(dimensions)
     .enter().append("g")
     .attr("class", "dimension")
-    .attr("transform", function(d) { return "translate(" + x(d) + ")"; });
+    .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
+    .call(d3.behavior.drag()
+        .origin(function(d) { return {x: x(d)}; })
+        .on("dragstart", function(d) {
+          dragging[d] = x(d);
+          background.attr("visibility", "hidden");
+        })
+        .on("drag", function(d) {
+          dragging[d] = Math.min(width, Math.max(0, d3.event.x));
+          foreground.attr("d", path);
+          dimensions.sort(function(a, b) { return position(a) - position(b); });
+          x.domain(dimensions);
+          g.attr("transform", function(d) { return "translate(" + position(d) + ")"; })
+        })
+        .on("dragend", function(d) {
+          delete dragging[d];
+          transition(d3.select(this)).attr("transform", "translate(" + x(d) + ")");
+          transition(foreground).attr("d", path);
+          background
+              .attr("d", path)
+            .transition()
+              .delay(500)
+              .duration(0)
+              .attr("visibility", null);
+        }));
 
   // Add an axis and title.
   g.append("g")
@@ -137,6 +156,7 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
     .text(function(d) { return d; });
 
 
+
   // // Add and store a brush for each axis.
   // g.append("g")
   //   .attr("class", "brush")
@@ -146,12 +166,22 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
   //   .attr("width", 16);
 
 
+  function position(d) {
+    var v = dragging[d];
+    return v == null ? x(d) : v;
+  }
 
-
+  function transition(g) {
+    return g.transition().duration(500);
+  }
 
   // Returns the path for a given data point.
+  //function path(d) {
+  //  return line(dimensions.map(function(p) { return [x(p), y[p](d[p])]; }));
+  //}
+
   function path(d) {
-    return line(dimensions.map(function(p) { return [x(p), y[p](d[p])]; }));
+    return line(dimensions.map(function(p) { return [position(p), y[p](d[p])]; }));
   }
 
   // Handles a brush event, toggling the display of foreground lines.
