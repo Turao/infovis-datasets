@@ -19,7 +19,6 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
   // Extract the possible values for species
   var speciesSet = new Set();
   data.map(function (o){ speciesSet.add(o['species']); });
@@ -29,7 +28,7 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
     if(d == 'species') {
       y[d] = d3.scale.ordinal()
         .domain(Array.from(speciesSet))
-        .rangeRoundPoints([height, 0]);
+        .rangeRoundPoints([height, 0])
     }
     else {
       y[d] = d3.scale.linear()
@@ -41,7 +40,6 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
     return y[d];
   }));
 
-
   // Add grey background lines for context.
   background = svg.append("g")
     .attr("class", "background")
@@ -49,7 +47,6 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
     .data(data)
     .enter().append("path")
     .attr("d", path);
-
 
   // highlighted lines
   var highlighted = new Set();
@@ -69,7 +66,9 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
   function unhighlightPath (path) {
     highlighted.delete(path[0][0]);
     
-    path.attr("stroke", 'steelblue')
+    path.attr("stroke", function(data) {
+        return color(data['species']);
+      })
       .attr("stroke-width", "1px");
   };
 
@@ -80,7 +79,6 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
     .data(data)
     .enter().append("path")
     .attr("d", path)
-
     .on("mouseover", function() {
       var path = d3.select(this);
       if(!highlighted.has(path[0][0])) {
@@ -103,7 +101,6 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
         unhighlightPath(path);
       }
     })
-
     .on("click", function() {
       var path = d3.select(this);
 
@@ -116,12 +113,12 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
     })
 
     // // DISABLE TO USE DIFFERENT COLORS FOR EACH SPECIES!    
-    .attr("stroke", 'steelblue');
+    //.attr("stroke", 'steelblue');
 
     // // ENABLE TO USE DIFFERENT COLORS FOR EACH SPECIES!
-    // .attr("stroke", function(data) {
-    //   return color(data['species']);
-    // });
+    .attr("stroke", function(data) {
+      return color(data['species']);
+    });
 
   // Add a group element for each dimension.
   var g = svg.selectAll(".dimension")
@@ -163,8 +160,6 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
     .attr("y", -10)
     .text(function(d) { return d; });
 
-
-
   // // Add and store a brush for each axis.
   g.append("g")
     .attr("class", "brush")
@@ -172,7 +167,6 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
     .selectAll("rect")
     .attr("x", -10)
     .attr("width", 16);
-
 
   function position(d) {
     var v = dragging[d];
@@ -199,14 +193,13 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
     
     foreground.style("display", function(d) {
       return actives.every(function(p, i) {
-        return extents[i][0] <= d[p] && d[p] <= extents[i][1];
+        if(p == 'species') {
+            return extents[i][0] <= y[p](d[p])  && y[p](d[p]) <= extents[i][1];
+        } else {
+            return extents[i][0] <= d[p] && d[p] <= extents[i][1];     
+        }
       }) ? null : "none";
     });
   }
 
-
-
-
 });
-
-
