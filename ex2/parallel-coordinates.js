@@ -158,12 +158,12 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
 
 
   // // Add and store a brush for each axis.
-  // g.append("g")
-  //   .attr("class", "brush")
-  //   .each(function(d) { d3.select(this).call(y[d].brush = d3.svg.brush().y(y[d]).on("brush", brush)); })
-  //   .selectAll("rect")
-  //   .attr("x", -10)
-  //   .attr("width", 16);
+  g.append("g")
+    .attr("class", "brush")
+    .each(function(d) { d3.select(this).call(y[d].brush = d3.svg.brush().y(y[d]).on("brush", brush)); })
+    .selectAll("rect")
+    .attr("x", -10)
+    .attr("width", 16);
 
 
   function position(d) {
