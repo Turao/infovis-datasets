@@ -10,18 +10,35 @@
 </head>
 <body>
     <div class="container">
-        <div class="chart" id="ch1"></div>
-        <div class="info-view-container"> 
-        
-        <form class="block info-view">
-            <h3 class="fs-title"> Highlighted line: </h3>
-            Species: <input type="text" id="species" readonly>
-            Sepal Length: <input type="text" id="sepal-length" readonly>
-            Sepal Width: <input type="text" id="sepal-width" readonly>
-            Petal Length: <input type="text" id="petal-length" readonly>
-            Petal Width: <input type="text" id="petal-width" readonly>
-        </form>
+        <h1>Flowers Data Set Visualization</h1>
+        <div class="col1 chart" id="ch1"></div>
+        <div class="col2 info-view-container">
+            <table class="table-fill">
+            <thead>
+                <tr>
+                    <th colspan="5" class="text-center">Highlighted line:</th>
+                </tr>
+            </thead>
+            <tbody class="table-hover">
+                <tr>
+                    <td class="text-center">Species</td>
+                    <td class="text-center">Sepal Length</td>
+                    <td class="text-center">Sepal Width</td>
+                    <td class="text-center">Petal Length</td>
+                    <td class="text-center">Petal Width</td>
+                </tr>
+                <tr>
+                    <td id="species"      class="text-center color-red">&nbsp;</td>
+                    <td id="sepal-length" class="text-center color-red">&nbsp;</td>
+                    <td id="sepal-width"  class="text-center color-red">&nbsp;</td>
+                    <td id="petal-length" class="text-center color-red">&nbsp;</td>
+                    <td id="petal-width"  class="text-center color-red">&nbsp;</td>
+                </tr>
+            </tbody>
+            </table>
         </div>
     </div>
+    <br />
+    <br />
 </body>
 </html>

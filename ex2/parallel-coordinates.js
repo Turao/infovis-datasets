@@ -82,16 +82,16 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
     .on("mouseover", function() {
       var path = d3.select(this);
       if(!highlighted.has(path[0][0])) {
-        path.attr("stroke", 'red')
-          .attr("stroke-width", "3px");
+        path.attr("stroke", '#c8291c')
+          .attr("stroke-width", "4px");
       }
 
       // COMMENT TO DISABLE FORM VALUES UPDATE
-      document.getElementById("species").value = path[0][0]['__data__']['species'];
-      document.getElementById("sepal-length").value = path[0][0]['__data__']['sepal length'];
-      document.getElementById("sepal-width").value = path[0][0]['__data__']['sepal width'];
-      document.getElementById("petal-length").value = path[0][0]['__data__']['petal length'];
-      document.getElementById("petal-width").value = path[0][0]['__data__']['petal width'];
+      document.getElementById("species").innerHTML      = path[0][0]['__data__']['species'];
+      document.getElementById("sepal-length").innerHTML = path[0][0]['__data__']['sepal length'];
+      document.getElementById("sepal-width").innerHTML  = path[0][0]['__data__']['sepal width'];
+      document.getElementById("petal-length").innerHTML = path[0][0]['__data__']['petal length'];
+      document.getElementById("petal-width").innerHTML  = path[0][0]['__data__']['petal width'];
 
     })
     .on("mouseout", function() {
@@ -100,6 +100,14 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
       if(!highlighted.has(path[0][0])) {
         unhighlightPath(path);
       }
+
+      // COMMENT TO DISABLE FORM VALUES UPDATE
+      document.getElementById("species").innerHTML      = "&nbsp;";
+      document.getElementById("sepal-length").innerHTML = "&nbsp;";
+      document.getElementById("sepal-width").innerHTML  = "&nbsp;";
+      document.getElementById("petal-length").innerHTML = "&nbsp;";
+      document.getElementById("petal-width").innerHTML  = "&nbsp;";
+
     })
     .on("click", function() {
       var path = d3.select(this);
