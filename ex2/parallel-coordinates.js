@@ -87,6 +87,14 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
         path.attr("stroke", 'red')
           .attr("stroke-width", "3px");
       }
+
+      // COMMENT TO DISABLE FORM VALUES UPDATE
+      document.getElementById("species").value = path[0][0]['__data__']['species'];
+      document.getElementById("sepal-length").value = path[0][0]['__data__']['sepal length'];
+      document.getElementById("sepal-width").value = path[0][0]['__data__']['sepal width'];
+      document.getElementById("petal-length").value = path[0][0]['__data__']['petal length'];
+      document.getElementById("petal-width").value = path[0][0]['__data__']['petal width'];
+
     })
     .on("mouseout", function() {
       var path = d3.select(this);
