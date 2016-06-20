@@ -1,7 +1,7 @@
 d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flowers.csv", function(error, data) {
 
   var margin = {top: 30, right: 10, bottom: 10, left: 10},
-    width = 960 - margin.left - margin.right,
+    width = 760 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
   var x = d3.scale.ordinal().rangePoints([0, width], 1),
@@ -40,6 +40,15 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
     return y[d];
   }));
 
+
+   // Creates a color function
+  var color = d3.scale.ordinal()
+    .domain(Array.from(speciesSet))
+    // .range(["#a7d6ee", "#eee3a7" , "#eea7b2"]);
+    .range(["#92ccea", "#eadc92" , "#ea929f"]);
+
+
+
   // Add grey background lines for context.
   background = svg.append("g")
     .attr("class", "background")
@@ -52,25 +61,76 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
   var highlighted = new Set();
 
 
-  // Creates a color function
-  var color = d3.scale.category10()
-    .domain(Array.from(speciesSet));
+
+
+  function addRow(path) {
+    var table = document.getElementById('table-contents');
+    var newRow = table.insertRow();
+    newRow.className = 'highlighted-line-values';
+    newRow.id = 'highlighted' + path[0][0]['outerHTML'];
+
+    var species = newRow.insertCell();
+    species.innerHTML = path[0][0]['__data__']['species'];
+
+    var sepal_length = newRow.insertCell();
+    sepal_length.innerHTML = path[0][0]['__data__']['sepal length'];
+
+    var sepal_width = newRow.insertCell();
+    sepal_width.innerHTML = path[0][0]['__data__']['sepal width'];
+
+    var petal_length = newRow.insertCell();
+    petal_length.innerHTML = path[0][0]['__data__']['petal length'];
+
+    var petal_width = newRow.insertCell();
+    petal_width.innerHTML = path[0][0]['__data__']['petal width'];
+  }
+
+  function deleteRow(path) {
+    var rowToBeDeleted = document.getElementById('highlighted' + path[0][0]['outerHTML']);
+        rowToBeDeleted.parentNode.removeChild(rowToBeDeleted);
+  }
+
+
+  function highlightRow(path) {
+    var rowToBeHighlighted = document.getElementById('highlighted' + path[0][0]['outerHTML']);
+    rowToBeHighlighted.className = 'highlighted-row';
+  }
+
+  function unhighlightRow(path) {
+    var rowToBeUnhighlighted = document.getElementById('highlighted' + path[0][0]['outerHTML']);
+    rowToBeUnhighlighted.className = 'highlighted-line-values';
+  }
+
+
+ 
+
 
   function highlightPath (path) {
     highlighted.add(path[0][0]);
 
-    path.attr("stroke", 'green')
+    path.attr("stroke", '#a8db44')
       .attr("stroke-width", "5px");
+
+    addRow(path);
   };
 
   function unhighlightPath (path) {
-    highlighted.delete(path[0][0]);
+    if(highlighted.has(path[0][0])) {
+      highlighted.delete(path[0][0]);
+
+      var rowToBeDeleted = document.getElementById('highlighted' + path[0][0]['outerHTML']);
+      rowToBeDeleted.parentNode.removeChild(rowToBeDeleted);
+    }
     
     path.attr("stroke", function(data) {
         return color(data['species']);
       })
       .attr("stroke-width", "1px");
   };
+
+
+
+
 
   // Add blue foreground lines for focus.
   foreground = svg.append("g")
@@ -82,9 +142,8 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
     .on("mouseover", function() {
       var path = d3.select(this);
       if(!highlighted.has(path[0][0])) {
-        path.attr("stroke", '#c8291c')
+        path.attr("stroke", '#f06060')
           .attr("stroke-width", "4px");
-      }
 
       // COMMENT TO DISABLE FORM VALUES UPDATE
       document.getElementById("species").innerHTML      = path[0][0]['__data__']['species'];
@@ -93,12 +152,19 @@ d3.csv("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex2/flow
       document.getElementById("petal-length").innerHTML = path[0][0]['__data__']['petal length'];
       document.getElementById("petal-width").innerHTML  = path[0][0]['__data__']['petal width'];
 
+      }
+      else {
+        highlightRow(path);
+      }
     })
     .on("mouseout", function() {
       var path = d3.select(this);
 
       if(!highlighted.has(path[0][0])) {
         unhighlightPath(path);
+      }
+      else {
+        unhighlightRow(path);
       }
 
       // COMMENT TO DISABLE FORM VALUES UPDATE
