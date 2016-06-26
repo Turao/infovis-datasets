@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100);
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100);
 
 body {
   font-family: "Roboto", helvetica, arial, sans-serif;
@@ -28,5 +28,5 @@ h2{
   font-style: normal;
   font-family: "Roboto", helvetica, arial, sans-serif;
   text-align: center;
-  margin: 0;
+  margin: 5px;
 }

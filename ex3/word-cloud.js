@@ -4,7 +4,6 @@ d3.json("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex3/tre
     if(topic.charAt(0) == '#') {
       topic = topic.slice(1, topic.length);
     }
-    console.log(topic);
     return topic;
   });
 
