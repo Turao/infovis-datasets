@@ -1,25 +1,37 @@
-d3.json("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex1/cancerData.tsv", function(error, data) {
+d3.json("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex3/trending_topics.json", function(error, data) {
+
+  data = data.map(function(topic) {
+    if(topic.charAt(0) == '#') {
+      topic = topic.slice(1, topic.length);
+    }
+    console.log(topic);
+    return topic;
+  });
+
 
   var fill = d3.scale.category20();
 
-  d3.layout.cloud().size([300, 300])
-      .words([
-        "Hello", "world", "normally", "you", "want", "more", "words",
-        "than", "this"].map(function(d) {
-        return {text: d, size: 10 + Math.random() * 90};
+
+  var height = 800,
+    width = 800;
+
+  d3.layout.cloud().size([height, width])
+      .words(data.map(function (d, i) {
+        // console.log(data.length-i);
+        return {text: d, size: 1 + data.length-i};
       }))
-      .rotate(function() { return ~~(Math.random() * 2) * 90; })
+      .rotate(function (d, i) { return ~~(data.length-i) * 90; })
       .font("Impact")
       .fontSize(function(d) { return d.size; })
       .on("end", draw)
       .start();
 
   function draw(words) {
-    d3.select("body").append("svg")
-        .attr("width", 300)
-        .attr("height", 300)
+    d3.select("#wc1").append("svg")
+        .attr("width", width)
+        .attr("height", height)
       .append("g")
-        .attr("transform", "translate(150,150)")
+        .attr("transform", "translate(" + height/2 + "," + width/2 + ")")
       .selectAll("text")
         .data(words)
       .enter().append("text")
