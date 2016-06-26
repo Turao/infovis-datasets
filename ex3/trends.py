@@ -25,14 +25,10 @@ WORLD_WOEID = 1
 world_trends = api.trends.place(_id=WORLD_WOEID)
 
 
-world_trends_set = set([trend['name']
- for trend in world_trends[0]['trends']])
-
-
 try:
 	trends_file = open('./trending_topics.json', "w")
 except:
 	sys.exit("ERROR. Couldn't open trends dataset file.")
 	
-trends_file.write(json.dumps(list(world_trends_set)))
+trends_file.write(json.dumps(world_trends))
 
