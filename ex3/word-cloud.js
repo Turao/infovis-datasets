@@ -1,8 +1,10 @@
 d3.json("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex3/trending_topics.json", function(error, data) {
 
-  data = data.map(function(topic) {
-    if(topic.charAt(0) == '#') {
-      topic = topic.slice(1, topic.length);
+  // console.log(data[0]['trends']);
+
+  data = data[0]['trends'].map(function(topic) {
+    if(topic['name'].charAt(0) == '#') {
+      topic['name'] = topic['name'].slice(1, topic['name'].length);
     }
     return topic;
   });
@@ -16,8 +18,7 @@ d3.json("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex3/tre
 
   d3.layout.cloud().size([height, width])
       .words(data.map(function (d, i) {
-        // console.log(data.length-i);
-        return {text: d, size: 1 + data.length-i};
+        return {text: d['name'], size: 1 + data.length-i, url: d['url']};
       }))
       .rotate(function (d, i) { return ~~(data.length-i) * 90; })
       .font("Impact")
@@ -40,6 +41,9 @@ d3.json("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex3/tre
         .attr("text-anchor", "middle")
         .attr("transform", function(d) {
           return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+        })
+        .on("click", function (d, i){
+          window.open(d['url']);
         })
         .text(function(d) { return d.text; });
   }
