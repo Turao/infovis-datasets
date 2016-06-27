@@ -1,4 +1,4 @@
-d3.json("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex3/trending_topics.json", function(error, data) {
+d3.json("https://rawgit.com/Turao/infovis-datasets/master/ex3/trending_topics.json", function(error, data) {
 
   // console.log(data[0]['trends']);
 
