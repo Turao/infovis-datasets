@@ -9,52 +9,108 @@ d3.json("https://rawgit.com/Turao/infovis-datasets/master/ex3/trending_topics.js
     return topic;
   });
 
-  // define biggest tweet_volume!!!
-  // set biggest font size for this tweet
-  // set other tweets font size according to this biggest one
-  // ex: biggest: 5000, actual: 1000
-  // 5000 -> set variable max_size = 50px; actual: tweet_volume_actual/biggest * max_size = 10px;
-
   var fill = d3.scale.category20();
 
-
-  var height = 800,
-      width  = 800;
+  var height = 600,
+      width  = 600;
 
   var biggest = 0;
   data.forEach( function(d) { if(d['tweet_volume'] > biggest) {biggest = d['tweet_volume'];}});
-  console.log(biggest); 
+  // console.log(biggest); 
 
   d3.layout.cloud().size([height, width])
       .words(data.map(function (d, i) {
         return {text: d['name'], size: (d['tweet_volume']/biggest * 100) < 15 ? 15 : (d['tweet_volume']/biggest * 100), url: d['url']};
       }))
-      .rotate(function (d, i) { return ~~((i)%2) * 90; })
+      .rotate(function() { return 0; })
       .font("Impact")
       .fontSize(function(d) { return d.size; })
-      .on("end", draw)
+      .on("end", drawCloud)
       .start();
 
-  function draw(words) {
-    d3.select("#wc1").append("svg")
+  d3.layout.cloud().size([height, width])
+      .words(data.map(function (d, i) {
+        return {text: d['name'], size: (d['tweet_volume']/biggest * 100) < 15 ? 15 : (d['tweet_volume']/biggest * 100), url: d['url']};
+      }))
+      .rotate(function(d, i) { return ~~(i) * 90; })
+      .font("Impact")
+      .fontSize(function(d) { return d.size; })
+      .on("end", drawMosaic)
+      .start();
+
+  function drawCloud(words) {
+   
+    //Construct the word cloud's SVG element
+    var svg = d3.select("#wc1").append("svg")
         .attr("width", width)
         .attr("height", height)
-      .append("g")
-        .attr("transform", "translate(" + height/2 + "," + width/2 + ")")
-      .selectAll("text")
-        .data(words)
-      .enter().append("text")
-        .style("font-size", function(d) { return d.size + "px"; })
+        .append("g")
+        .attr("transform", "translate(" + height/2 + "," + width/2 + ")");
+
+    var cloud = svg.selectAll("g text")
+                        .data(words, function(d) { return d.text; })
+
+    //Entering words
+    cloud.enter()
+        .append("text")
         .style("font-family", "Impact")
         .style("fill", function(d, i) { return fill(i); })
         .attr("text-anchor", "middle")
-        .attr("transform", function(d) {
-          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-        })
+        .attr('font-size', 1000)
+        .text(function(d) { return d.text; })
+        .attr("transform", "translate(" + height/2 + "," + width/2 + ")")
         .on("click", function (d, i){
-          window.open(d['url']);
-        })
-        .text(function(d) { return d.text; });
+            window.open(d['url']);
+        });
+
+    //Entering and existing words
+    cloud
+        .transition()
+            .duration(1000)
+            .style("font-size", function(d) { return d.size + "px"; })
+            .attr("transform", function(d) {
+                return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+            })
+            .style("fill-opacity", 1);
+
+  }
+
+  function drawMosaic(words) {
+   
+    //Construct the word mosaic's SVG element
+    var svg1 = d3.select("#wc2").append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", "translate(" + height/2 + "," + width/2 + ")");
+        //.rotate(function (d, i) { return ~~((i)%2) * 90 })
+
+    var cloud1 = svg1.selectAll("g text")
+                        .data(words, function(d) { return d.text; })
+
+    //Entering words
+    cloud1.enter()
+        .append("text")
+        .style("font-family", "Impact")
+        .style("fill", function(d, i) { return fill(i); })
+        .attr("text-anchor", "middle")
+        .attr('font-size', 500)
+        .text(function(d) { return d.text; })
+        .attr("transform", "translate(" + height/2 + "," + width/2 + ")")
+        .on("click", function (d, i){
+            window.open(d['url']);
+        });
+
+    //Entering and existing words
+    cloud1
+        .transition()
+            .duration(2000)
+            .style("font-size", function(d) { return d.size + "px"; })
+            .attr("transform", function(d) {
+                return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+            })
+            .style("fill-opacity", 1);
+
   }
 
 });

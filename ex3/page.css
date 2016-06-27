@@ -29,4 +29,10 @@ h2{
   font-family: "Roboto", helvetica, arial, sans-serif;
   text-align: center;
   margin: 5px;
+}s
+
+/* mouse over link */
+text#word:hover {
+    text-decoration: underline;
+    text-weight: bold;
 }
