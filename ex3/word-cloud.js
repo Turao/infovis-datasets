@@ -20,7 +20,7 @@ d3.json("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex3/tre
       .words(data.map(function (d, i) {
         return {text: d['name'], size: 1 + data.length-i, url: d['url']};
       }))
-      .rotate(function (d, i) { return ~~(data.length-i) * 90; })
+      .rotate(function (d, i) { return ~~((data.length-i)%2) * 90; })
       .font("Impact")
       .fontSize(function(d) { return d.size; })
       .on("end", draw)
