@@ -9,18 +9,27 @@ d3.json("https://raw.githubusercontent.com/Turao/infovis-datasets/master/ex3/tre
     return topic;
   });
 
+  // define biggest tweet_volume!!!
+  // set biggest font size for this tweet
+  // set other tweets font size according to this biggest one
+  // ex: biggest: 5000, actual: 1000
+  // 5000 -> set variable max_size = 50px; actual: tweet_volume_actual/biggest * max_size = 10px;
 
   var fill = d3.scale.category20();
 
 
   var height = 800,
-    width = 800;
+      width  = 800;
+
+  var biggest = 0;
+  data.forEach( function(d) { if(d['tweet_volume'] > biggest) {biggest = d['tweet_volume'];}});
+  console.log(biggest); 
 
   d3.layout.cloud().size([height, width])
       .words(data.map(function (d, i) {
-        return {text: d['name'], size: 1 + data.length-i, url: d['url']};
+        return {text: d['name'], size: (d['tweet_volume']/biggest * 100) < 15 ? 15 : (d['tweet_volume']/biggest * 100), url: d['url']};
       }))
-      .rotate(function (d, i) { return ~~((data.length-i)%2) * 90; })
+      .rotate(function (d, i) { return ~~((i)%2) * 90; })
       .font("Impact")
       .fontSize(function(d) { return d.size; })
       .on("end", draw)
